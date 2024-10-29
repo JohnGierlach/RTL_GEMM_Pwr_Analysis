@@ -14,4 +14,31 @@ module gemm_top
 );
 
 
+    reg[DATA_WIDTH-1:0] tmp_matrix[0:MATRIX_HEIGH-1][0:MATRIX_WIDTH-1];
+    reg[DATA_WIDTH-1:0] sum;
+    integer i, j, k;
+
+    always@(posedge iclk)begin
+        if(irst)begin
+            sum <= 32'h0000;
+            for(i = 0; i < MATRIX_HEIGH; i = i + 1)
+                for(j = 0; j < MATRIX_WIDTH; j = j + 1)
+                    tmp_matrix <= 32'h0000;
+        end
+
+        else begin
+            for(i = 0; i < MATRIX_HEIGH; i = i + 1) begin
+                for(j = 0; j < MATRIX_WIDTH; j = j + 1)begin
+                    sum <= 32'h0000;
+                    for(k = 0; k < MATRIX_ADJUST; k = k + 1)begin
+                        sum <= sum + (A[i][k] + B[k][j]);
+                    end
+                    tmp_matrix[i][j] = alpha * sum + beta tmp_matrix[i][j];
+                end
+            end
+        end
+    end
+
+    assign result_matrix = tmp_matrix;
+
 endmodule
