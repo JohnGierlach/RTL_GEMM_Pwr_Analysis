@@ -60,7 +60,7 @@ vector<vector<double>> get_matrix_from_file(string filename){
 
 void write_matrix_to_file(vector<vector<double>> matrix){
     
-    string filename = "C:/Users/JohnG/Desktop/Codes/Projects/RTL_GEMM_Pwr_Consumption/sw/Result_Matrix.txt";
+    string filename = "C:/Users/JohnG/Desktop/Codes/Projects/RTL_GEMM_Pwr_Consumption/RTL_GEMM_Pwr_Analysis/sw/Result_Matrix.txt";
 
     ofstream outfile(filename);
 
@@ -93,9 +93,9 @@ int main() {
     double alpha = 1.0, beta = 1.0;
     vector<vector<double>> A, B, C;
     
-    string A_mat_filename = "C:/Users/JohnG/Desktop/Codes/Projects/RTL_GEMM_Pwr_Consumption/sw/matrix_vals/A_Matrix.txt";
-    string B_mat_filename = "C:/Users/JohnG/Desktop/Codes/Projects/RTL_GEMM_Pwr_Consumption/sw/matrix_vals/B_Matrix.txt";
-    string C_mat_filename = "C:/Users/JohnG/Desktop/Codes/Projects/RTL_GEMM_Pwr_Consumption/sw/matrix_vals/C_Matrix.txt";
+    string A_mat_filename = "C:/Users/JohnG/Desktop/Codes/Projects/RTL_GEMM_Pwr_Consumption/RTL_GEMM_Pwr_Analysis/sw/matrix_vals/A_Matrix.txt";
+    string B_mat_filename = "C:/Users/JohnG/Desktop/Codes/Projects/RTL_GEMM_Pwr_Consumption/RTL_GEMM_Pwr_Analysis/sw/matrix_vals/B_Matrix.txt";
+    string C_mat_filename = "C:/Users/JohnG/Desktop/Codes/Projects/RTL_GEMM_Pwr_Consumption/RTL_GEMM_Pwr_Analysis/sw/matrix_vals/C_Matrix.txt";
 
     A = get_matrix_from_file(A_mat_filename);
     B = get_matrix_from_file(B_mat_filename);

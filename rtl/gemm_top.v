@@ -7,23 +7,21 @@ module gemm_top
   MATRIX_ADJUST = 4)(
     input iclk, irst,
     input[DATA_WIDTH-1:0] alpha, beta,
-    input[DATA_WIDTH-1:0] a_matrix [0:MATRIX_HEIGHT-1][0:MATRIX_WIDTH-1],
-    input[DATA_WIDTH-1:0] b_matrix [0:MATRIX_HEIGHT-1][0:MATRIX_WIDTH-1],
-    input[DATA_WIDTH-1:0] c_matrix [0:MATRIX_HEIGHT-1][0:MATRIX_WIDTH-1],
-    output[DATA_WIDTH-1:0] result_matrix [0:MATRIX_HEIGHT-1][0:MATRIX_WIDTH-1]
+    input real a_matrix [0:MATRIX_HEIGHT-1][0:MATRIX_WIDTH-1],
+    input real b_matrix [0:MATRIX_HEIGHT-1][0:MATRIX_WIDTH-1],
+    input real c_matrix [0:MATRIX_HEIGHT-1][0:MATRIX_WIDTH-1],
+    output real result_matrix [0:MATRIX_HEIGHT-1][0:MATRIX_WIDTH-1]
 );
 
 
-    reg[DATA_WIDTH-1:0] tmp_matrix[0:MATRIX_HEIGH-1][0:MATRIX_WIDTH-1];
-    reg[DATA_WIDTH-1:0] sum;
+    real tmp_matrix[0:MATRIX_HEIGH-1][0:MATRIX_WIDTH-1];
+    real sum;
     integer i, j, k;
 
     always@(posedge iclk)begin
         if(irst)begin
-            sum <= 32'h0000;
-            for(i = 0; i < MATRIX_HEIGH; i = i + 1)
-                for(j = 0; j < MATRIX_WIDTH; j = j + 1)
-                    tmp_matrix <= 32'h0000;
+            sum <= 32'h0000
+            tmp_matrix <= c_matrix;
         end
 
         else begin
