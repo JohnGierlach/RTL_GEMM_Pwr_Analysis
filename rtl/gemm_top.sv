@@ -1,7 +1,7 @@
 `timescale 1ps/1ps
 
 module gemm_top
-#(DATA_WIDTH = 32,
+#(DATA_WIDTH = 64,
   MATRIX_WIDTH = 4,
   MATRIX_HEIGHT = 4,
   MATRIX_ADJUST = 4)(

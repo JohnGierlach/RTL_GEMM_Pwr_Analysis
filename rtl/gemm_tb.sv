@@ -1,11 +1,11 @@
 module gemm_tb();
     
-    parameter DATA_WIDTH = 32, MATRIX_WIDTH = 4, MATRIX_HEIGHT = 4, MATRIX_ADJUST = 4;
+    parameter DATA_WIDTH = 64, MATRIX_WIDTH = 4, MATRIX_HEIGHT = 4, MATRIX_ADJUST = 4;
     
     reg iclk, irst;
-    reg[DATA_WIDTH-1:0] a_matrix [0:MATRIX_HEIGHT-1][0:MATRIX_WIDTH-1];
-    reg[DATA_WIDTH-1:0] b_matrix [0:MATRIX_HEIGHT-1][0:MATRIX_WIDTH-1];
-    reg[DATA_WIDTH-1:0] c_matrix [0:MATRIX_HEIGHT-1][0:MATRIX_WIDTH-1];
+    real a_matrix [0:MATRIX_HEIGHT-1][0:MATRIX_WIDTH-1];
+    real b_matrix [0:MATRIX_HEIGHT-1][0:MATRIX_WIDTH-1];
+    real c_matrix [0:MATRIX_HEIGHT-1][0:MATRIX_WIDTH-1];
     reg[DATA_WIDTH-1:0] alpha, beta;
 
     wire[DATA_WIDTH-1:0] result_matrix [0:MATRIX_HEIGHT-1][0:MATRIX_WIDTH-1];
