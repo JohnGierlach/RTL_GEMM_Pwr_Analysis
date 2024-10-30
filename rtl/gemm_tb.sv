@@ -3,12 +3,12 @@ module gemm_tb();
     parameter DATA_WIDTH = 32, MATRIX_WIDTH = 4, MATRIX_HEIGHT = 4, MATRIX_ADJUST = 4;
     
     reg iclk, irst;
-    real a_matrix [0:MATRIX_HEIGHT-1][0:MATRIX_WIDTH-1];
-    real b_matrix [0:MATRIX_HEIGHT-1][0:MATRIX_WIDTH-1];
-    real c_matrix [0:MATRIX_HEIGHT-1][0:MATRIX_WIDTH-1];
-    reg [DATA_WIDTH-1:0] alpha, beta;
+    reg[DATA_WIDTH-1:0] a_matrix [0:MATRIX_HEIGHT-1][0:MATRIX_WIDTH-1];
+    reg[DATA_WIDTH-1:0] b_matrix [0:MATRIX_HEIGHT-1][0:MATRIX_WIDTH-1];
+    reg[DATA_WIDTH-1:0] c_matrix [0:MATRIX_HEIGHT-1][0:MATRIX_WIDTH-1];
+    reg[DATA_WIDTH-1:0] alpha, beta;
 
-    wire real result_matrix [0:MATRIX_HEIGHT-1][0:MATRIX_WIDTH-1];
+    wire[DATA_WIDTH-1:0] result_matrix [0:MATRIX_HEIGHT-1][0:MATRIX_WIDTH-1];
 
 
     gemm_top UUT(.iclk(iclk),
@@ -21,14 +21,14 @@ module gemm_tb();
                  .result_matrix(result_matrix));
     
     real A_tmp, B_tmp, C_tmp;
-    integer i, j, file;
+    integer i, j, A_file, B_file, C_file;
     initial begin
 
-        A_file $fopen("C:/Users/JohnG/Desktop/Codes/Projects/RTL_GEMM_Pwr_Consumption/RTL_GEMM_Pwr_Analysis/sw/matrix_vals/A_Matrix", "r");
-        B_file $fopen("C:/Users/JohnG/Desktop/Codes/Projects/RTL_GEMM_Pwr_Consumption/RTL_GEMM_Pwr_Analysis/sw/matrix_vals/B_Matrix", "r");
-        C_file $fopen("C:/Users/JohnG/Desktop/Codes/Projects/RTL_GEMM_Pwr_Consumption/RTL_GEMM_Pwr_Analysis/sw/matrix_vals/C_Matrix", "r");
+        A_file = $fopen("C:/Users/JohnG/Desktop/Codes/Projects/RTL_GEMM_Pwr_Consumption/RTL_GEMM_Pwr_Analysis/sw/matrix_vals/A_Matrix.txt", "r");
+        B_file = $fopen("C:/Users/JohnG/Desktop/Codes/Projects/RTL_GEMM_Pwr_Consumption/RTL_GEMM_Pwr_Analysis/sw/matrix_vals/B_Matrix.txt", "r");
+        C_file = $fopen("C:/Users/JohnG/Desktop/Codes/Projects/RTL_GEMM_Pwr_Consumption/RTL_GEMM_Pwr_Analysis/sw/matrix_vals/C_Matrix.txt", "r");
 
-        for(i = 0; i < MATRIX_HEIGH; i = i + 1)begin
+        for(i = 0; i < MATRIX_HEIGHT; i = i + 1)begin
             for(j = 0; j < MATRIX_WIDTH; j = j + 1)begin
                 $fscanf(A_file, "%f", A_tmp);
                 $fscanf(B_file, "%f", B_tmp);
@@ -47,7 +47,7 @@ module gemm_tb();
         beta = 1;
         #10
         irst = 0;
-        #10
+        #10;
     end
 
     always #10 iclk = ~iclk;
