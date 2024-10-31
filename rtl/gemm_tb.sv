@@ -2,23 +2,27 @@ module gemm_tb();
     
     parameter DATA_WIDTH = 64, MATRIX_WIDTH = 4, MATRIX_HEIGHT = 4, MATRIX_ADJUST = 4;
     
-    reg iclk, irst;
-    real a_matrix [0:MATRIX_HEIGHT-1][0:MATRIX_WIDTH-1];
-    real b_matrix [0:MATRIX_HEIGHT-1][0:MATRIX_WIDTH-1];
-    real c_matrix [0:MATRIX_HEIGHT-1][0:MATRIX_WIDTH-1];
-    reg[DATA_WIDTH-1:0] alpha, beta;
+    reg iclk, irst, istart;
+    logic signed [DATA_WIDTH-1:0] ia_matrix [0:MATRIX_HEIGHT-1][0:MATRIX_WIDTH-1];
+    logic signed [DATA_WIDTH-1:0] ib_matrix [0:MATRIX_HEIGHT-1][0:MATRIX_WIDTH-1];
+    logic signed [DATA_WIDTH-1:0] ic_matrix [0:MATRIX_HEIGHT-1][0:MATRIX_WIDTH-1];
+    reg[DATA_WIDTH-1:0] ialpha, ibeta;
 
-    wire[DATA_WIDTH-1:0] result_matrix [0:MATRIX_HEIGHT-1][0:MATRIX_WIDTH-1];
+    wire[DATA_WIDTH-1:0] oresult_matrix [0:MATRIX_HEIGHT-1][0:MATRIX_WIDTH-1];
+    wire obusy, odone;
 
 
     gemm_top UUT(.iclk(iclk),
                  .irst(irst),
-                 .alpha(alpha),
-                 .beta(beta),
-                 .a_matrix(a_matrix),
-                 .b_matrix(b_matrix),
-                 .c_matrix(c_matrix),
-                 .result_matrix(result_matrix));
+                 .istart(istart),
+                 .ialpha(ialpha),
+                 .ibeta(ibeta),
+                 .ia_matrix(ia_matrix),
+                 .ib_matrix(ib_matrix),
+                 .ic_matrix(ic_matrix),
+                 .oresult_matrix(oresult_matrix),
+                 .obusy(obusy),
+                 .odone(odone));
     
     real A_tmp, B_tmp, C_tmp;
     integer i, j, A_file, B_file, C_file;
@@ -34,20 +38,26 @@ module gemm_tb();
                 $fscanf(B_file, "%f", B_tmp);
                 $fscanf(C_file, "%f", C_tmp);
                 
-                a_matrix[i][j] = A_tmp;
-                b_matrix[i][j] = B_tmp;
-                c_matrix[i][j] = C_tmp;
+                ia_matrix[i][j] = A_tmp;
+                ib_matrix[i][j] = B_tmp;
+                ic_matrix[i][j] = C_tmp;
                 
             end
         end
 
         irst = 1;
         iclk = 1;
-        alpha = 1;
-        beta = 1;
+        ialpha = 1;
+        ibeta = 1;
+        istart = 0;
         #10
+        istart = 1;
         irst = 0;
         #10;
+        if(odone)begin
+            istart = 0;
+            $finish;
+        end
     end
 
     always #10 iclk = ~iclk;
