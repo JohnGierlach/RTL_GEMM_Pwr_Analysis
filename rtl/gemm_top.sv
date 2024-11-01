@@ -27,7 +27,7 @@ module gemm_top
             IDLE: next_state = (istart) ? COMPUTE : IDLE;
             COMPUTE: next_state = (i == MATRIX_HEIGHT) && 
                                   (j == MATRIX_WIDTH)  && 
-                                  (k == MATRIX_ADJUST) ? COMPUTE : IDLE;
+                                  (k == MATRIX_ADJUST) ? DONE : COMPUTE;
             DONE: next_state = IDLE;
         endcase
     end
@@ -46,7 +46,7 @@ module gemm_top
             sum <= 64'h0000;
             i <= 0;
             j <= 0;
-            j <= 0;
+            k <= 0;
             for(i = 0; i < MATRIX_HEIGHT; i = i + 1) begin
                 for(j = 0; j < MATRIX_WIDTH; j = j + 1)
                     tmp_matrix[i][j] <= ic_matrix[i][j];
