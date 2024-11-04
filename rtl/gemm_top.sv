@@ -55,16 +55,22 @@ module gemm_top
         
         // Compute the matrix
         else if(state == COMPUTE)begin
-            sum <= sum + (ia_matrix[i][k] * ib_matrix[k][j]);
-            tmp_matrix[i][j] <= (ialpha * sum) + (ibeta * tmp_matrix[i][j]);
-            // Update looking variables
-            if(k < MATRIX_ADJUST - 1)
-                k <= k + 1;
             
+            // Update looking variables
+            if(k < MATRIX_ADJUST - 1)begin
+                sum <= sum + (ia_matrix[i][k] * ib_matrix[k][j]);
+                k <= k + 1;
+            end
+
             else begin
                 k <= 0;
-                if(j < MATRIX_WIDTH - 1)
+                sum <= 0;
+                
+                if(j < MATRIX_WIDTH - 1)begin
+                    tmp_matrix[i][j] <= (ialpha * sum) + (ibeta * tmp_matrix[i][j]);
                     j <= j + 1;
+                end
+                   
                 else begin
                     j <= 0;
                     if(i < MATRIX_HEIGHT - 1)
