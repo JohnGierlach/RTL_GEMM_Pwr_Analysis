@@ -25,9 +25,9 @@ module gemm_top
     always@(*)begin
         case(state)
             IDLE: next_state = (istart) ? COMPUTE : IDLE;
-            COMPUTE: next_state = (i == MATRIX_HEIGHT) && 
-                                  (j == MATRIX_WIDTH)  && 
-                                  (k == MATRIX_ADJUST) ? DONE : COMPUTE;
+            COMPUTE: next_state = (i == MATRIX_HEIGHT-1) && 
+                                  (j == MATRIX_WIDTH-1)  && 
+                                  (k == MATRIX_ADJUST-1) ? DONE : COMPUTE;
             DONE: next_state = IDLE;
         endcase
     end

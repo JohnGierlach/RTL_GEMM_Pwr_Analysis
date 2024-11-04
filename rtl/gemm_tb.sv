@@ -54,12 +54,16 @@ module gemm_tb();
         istart = 1;
         irst = 0;
         #10;
-        if(odone)begin
-            istart = 0;
-            $finish;
-        end
     end
-
+    
+    always@(posedge iclk)begin
+        if(odone)
+            istart = 0;
+        
+        if(oresult_matrix[0][0] != 0)
+            $finish;
+    end
+    
     always #10 iclk = ~iclk;
 
 endmodule
