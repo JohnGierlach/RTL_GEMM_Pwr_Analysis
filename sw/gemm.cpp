@@ -22,7 +22,6 @@ void gemm(int m, int n, int k,
             for (int p = 0; p < k; p++) {
                 sum += A[i][p] * B[p][j];
             }
-            cout << "Sum Value: " << sum << endl;
             C[i][j] = alpha * sum + beta * C[i][j];
         }
     }

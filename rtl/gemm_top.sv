@@ -27,7 +27,7 @@ module gemm_top
             IDLE: next_state = (istart) ? COMPUTE : IDLE;
             COMPUTE: next_state = (i == MATRIX_HEIGHT-1) && 
                                   (j == MATRIX_WIDTH-1)  && 
-                                  (k == MATRIX_ADJUST-1) ? DONE : COMPUTE;
+                                  (k == MATRIX_ADJUST) ? DONE : COMPUTE;
             DONE: next_state = IDLE;
         endcase
     end
@@ -57,7 +57,7 @@ module gemm_top
         else if(state == COMPUTE)begin
             
             // Update looking variables
-            if(k < MATRIX_ADJUST - 1)begin
+            if(k < MATRIX_ADJUST)begin
                 sum <= sum + (ia_matrix[i][k] * ib_matrix[k][j]);
                 k <= k + 1;
             end
@@ -66,14 +66,14 @@ module gemm_top
                 k <= 0;
                 sum <= 0;
                 
-                if(j < MATRIX_WIDTH - 1)begin
+                if(j < MATRIX_WIDTH)begin
                     tmp_matrix[i][j] <= (ialpha * sum) + (ibeta * tmp_matrix[i][j]);
                     j <= j + 1;
                 end
                    
                 else begin
                     j <= 0;
-                    if(i < MATRIX_HEIGHT - 1)
+                    if(i < MATRIX_HEIGHT)
                         i <= i + 1;
                     else
                         i <= 0;
@@ -83,6 +83,9 @@ module gemm_top
 
         else if(state == DONE)begin
             foreach (oresult_matrix[i,j]) oresult_matrix[i][j] <= tmp_matrix[i][j];
+            i <= 0;
+            j <= 0;
+            k <= 0;
         end 
     end
     
