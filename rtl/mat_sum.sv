@@ -1,4 +1,4 @@
-module N_length_gemm
+module mat_sum
 #(DATA_WIDTH = 64,
   MATRIX_WIDTH = 4,
   MATRIX_HEIGHT = 4,
