@@ -45,7 +45,7 @@ module gemm_top
         case(state)
             IDLE: next_state = (istart) ? COMPUTE : IDLE;
             COMPUTE: next_state = (i == MATRIX_HEIGHT-1) && 
-                                  (j == MATRIX_WIDTH-1)  && ? DONE : COMPUTE;
+                                  (j == MATRIX_WIDTH-1) ? DONE : COMPUTE;
             DONE: next_state = IDLE;
         endcase
     end
@@ -73,7 +73,6 @@ module gemm_top
         // Compute the matrix
         else if(state == COMPUTE)begin
             
-            else begin
                 sum <= 0;
                 
                 if(j < MATRIX_WIDTH)begin
@@ -88,14 +87,12 @@ module gemm_top
                     else
                         i <= 0;
                 end
-            end
         end
 
         else if(state == DONE)begin
             foreach (oresult_matrix[i,j]) oresult_matrix[i][j] <= tmp_matrix[i][j];
             i <= 0;
             j <= 0;
-            k <= 0;
         end 
     end
     
