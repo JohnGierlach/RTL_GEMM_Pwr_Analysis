@@ -19,6 +19,7 @@ module gemm_top
     
     reg[DATA_WIDTH-1:0] tmp_matrix [0:MATRIX_HEIGHT-1][0:MATRIX_WIDTH-1];
     reg[1:0] state, next_state;
+    reg[DATA_WIDTH-1:0] partial_sum [0:MATRIX_WIDTH-1];
     reg[DATA_WIDTH-1:0] sum;
     int i, j;
     
@@ -32,15 +33,22 @@ module gemm_top
             ) mat_sum_inst (
                 .iclk(iclk),
                 .irst(irst),
-                .icurr_sum(sum),
                 .ia_matrix_tile(ia_matrix[i][gen_k]),
                 .ib_matrix_tile(ib_matrix[gen_k][j]),
-                .osum(sum)
+                .osum(partial_sum[gen_k])
             );
         end
     endgenerate
 
+    // Add partial sums
+    always@(*)begin
+        sum = 0;
+        for(int k = 0; k < MATRIX_WIDTH; k = k + 1)begin
+            sum = sum + partial_sum[k];
+        end
+    end
 
+    // State Transition Logic
     always@(*)begin
         case(state)
             IDLE: next_state = (istart) ? COMPUTE : IDLE;
@@ -61,7 +69,6 @@ module gemm_top
     
     always@(posedge iclk)begin
         if(irst)begin
-            sum <= 64'h0000;
             i <= 0;
             j <= 0;
             for(i = 0; i < MATRIX_HEIGHT; i = i + 1) begin
@@ -73,8 +80,6 @@ module gemm_top
         // Compute the matrix
         else if(state == COMPUTE)begin
             
-                sum <= 0;
-                
                 if(j < MATRIX_WIDTH)begin
                     tmp_matrix[i][j] <= (ialpha * sum) + (ibeta * tmp_matrix[i][j]);
                     j <= j + 1;
