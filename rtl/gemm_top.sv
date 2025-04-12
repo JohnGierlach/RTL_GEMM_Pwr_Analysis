@@ -42,10 +42,15 @@ module gemm_top
 
     // Add partial sums
     always@(*)begin
-        sum = 0;
-        for(int k = 0; k < MATRIX_WIDTH; k = k + 1)begin
-            sum = sum + partial_sum[k];
+        if(irst == 0 && iclk == 1 && state == COMPUTE)begin
+            sum = 0;
+            for(int k = 0; k < MATRIX_WIDTH; k = k + 1)begin
+                sum = sum + partial_sum[k];
+            end
         end
+        
+        if(state == DONE)
+            sum = 0;
     end
 
     // State Transition Logic
@@ -82,15 +87,11 @@ module gemm_top
             
                 if(j < MATRIX_WIDTH)begin
                     tmp_matrix[i][j] <= (ialpha * sum) + (ibeta * tmp_matrix[i][j]);
-                    j <= j + 1;
+                    j <= (j != MATRIX_WIDTH-1) ? j + 1 : 0;
                 end
                    
-                else begin
-                    j <= 0;
-                    if(i < MATRIX_HEIGHT)
-                        i <= i + 1;
-                    else
-                        i <= 0;
+                if (j_done) begin
+                    i <= (i != MATRIX_HEIGHT-1) ? i + 1 : 0;
                 end
         end
 
@@ -101,7 +102,8 @@ module gemm_top
         end 
     end
     
-    
+    assign j_done = j == MATRIX_WIDTH-1;
+    assign i_done = i == MATRIX_HEIGHT-1;
     assign obusy = state == COMPUTE;
     assign odone = state == DONE;
 

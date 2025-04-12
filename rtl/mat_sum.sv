@@ -6,20 +6,9 @@ module mat_sum
     input iclk, irst,
     input logic signed [DATA_WIDTH-1:0] ia_matrix_tile,
     input logic signed [DATA_WIDTH-1:0] ib_matrix_tile,
-    output reg[DATA_WIDTH-1:0] osum
+    output[DATA_WIDTH-1:0] osum
 );
 
-
-reg[DATA_WIDTH-1:0] tmp_sum;
-
-
-    always@(posedge iclk)begin
-      if(irst)
-        tmp_sum <= 64'h0000;
-      else
-        tmp_sum <= (ia_matrix_tile * ib_matrix_tile);
-    end
-    
-assign osum = tmp_sum;
+assign osum = (ia_matrix_tile * ib_matrix_tile);
 
 endmodule
