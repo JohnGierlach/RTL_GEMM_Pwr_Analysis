@@ -6,6 +6,8 @@
 
 using namespace std;
 
+int iteration_count = 0;
+
 // GEMM Function: C = alpha * A * B + beta * C
 void gemm(int m, int n, int k, 
           double alpha, const vector<vector<double>>& A, 
@@ -21,10 +23,13 @@ void gemm(int m, int n, int k,
             double sum = 0.0;
             for (int p = 0; p < k; p++) {
                 sum += A[i][p] * B[p][j];
+                iteration_count++;
             }
             C[i][j] = alpha * sum + beta * C[i][j];
         }
     }
+
+    cout << "Total iterations: " << iteration_count << endl;
 }
 
 
@@ -89,7 +94,7 @@ void write_matrix_to_file(vector<vector<double>> matrix){
 
 int main() {
     // Hardcoded k values and corresponding folders
-    vector<int> k_values = {2, 8, 32};
+    vector<int> k_values = {4, 8, 32};
     for (int k : k_values) {
         string folder = "C:/Users/JohnG/Desktop/Codes/Projects/RTL_GEMM_Pwr_Consumption/RTL_GEMM_Pwr_Analysis/sw/matrix_vals/matrix_vals_k" + to_string(k);
         string A_mat_filename = folder + "/A_Matrix.txt";

@@ -16,7 +16,7 @@ n = 4
 
 def select_k(size):
     if size == "small":
-        return 2
+        return 4
     elif size == "medium":
         return 8
     elif size == "large":
