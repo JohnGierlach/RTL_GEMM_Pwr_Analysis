@@ -88,23 +88,40 @@ void write_matrix_to_file(vector<vector<double>> matrix){
 
 
 int main() {
-    // Example matrices and scalars
-    int m = 4, n = 4, k = 4;
-    double alpha = 1.0, beta = 1.0;
-    vector<vector<double>> A, B, C;
-    
-    string A_mat_filename = "C:/Users/JohnG/Desktop/Codes/Projects/RTL_GEMM_Pwr_Consumption/RTL_GEMM_Pwr_Analysis/sw/matrix_vals/A_Matrix.txt";
-    string B_mat_filename = "C:/Users/JohnG/Desktop/Codes/Projects/RTL_GEMM_Pwr_Consumption/RTL_GEMM_Pwr_Analysis/sw/matrix_vals/B_Matrix.txt";
-    string C_mat_filename = "C:/Users/JohnG/Desktop/Codes/Projects/RTL_GEMM_Pwr_Consumption/RTL_GEMM_Pwr_Analysis/sw/matrix_vals/C_Matrix.txt";
+    // Hardcoded k values and corresponding folders
+    vector<int> k_values = {2, 8, 32};
+    for (int k : k_values) {
+        string folder = "C:/Users/JohnG/Desktop/Codes/Projects/RTL_GEMM_Pwr_Consumption/RTL_GEMM_Pwr_Analysis/sw/matrix_vals/matrix_vals_k" + to_string(k);
+        string A_mat_filename = folder + "/A_Matrix.txt";
+        string B_mat_filename = folder + "/B_Matrix.txt";
+        string C_mat_filename = folder + "/C_Matrix.txt";
 
-    A = get_matrix_from_file(A_mat_filename);
-    B = get_matrix_from_file(B_mat_filename);
-    C = get_matrix_from_file(C_mat_filename);
+        vector<vector<double>> A = get_matrix_from_file(A_mat_filename);
+        vector<vector<double>> B = get_matrix_from_file(B_mat_filename);
+        vector<vector<double>> C = get_matrix_from_file(C_mat_filename);
 
-    gemm(m, n, k, alpha, A, B, beta, C);
+        int m = A.size();
+        int n = B[0].size();
+        double alpha = 1.0, beta = 1.0;
 
-    // Print the resulting matrix C to file
-    write_matrix_to_file(C);
-    
+        gemm(m, n, k, alpha, A, B, beta, C);
+
+        // Write result to a file in the same folder
+        string result_filename = folder + "/Result_Matrix.txt";
+        ofstream outfile(result_filename);
+        if (!outfile.is_open()) {
+            cerr << "Error: Could not open file " << result_filename << " for writing." << endl;
+            continue;
+        }
+        for (const auto& row : C) {
+            for (size_t j = 0; j < row.size(); ++j) {
+                outfile << row[j];
+                if (j < row.size() - 1) outfile << " ";
+            }
+            outfile << "\n";
+        }
+        outfile.close();
+        cout << "Matrix written to " << result_filename << endl;
+    }
     return 0;
 }
