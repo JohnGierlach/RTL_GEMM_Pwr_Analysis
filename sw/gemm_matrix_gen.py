@@ -11,8 +11,8 @@ def get_directory(k):
         os.makedirs(dir_name)
     return dir_name
 # Set Matrix Dimensions
-m = 4
-n = 4
+m = 6
+n = 8
 
 def select_k(size):
     if size == "small":

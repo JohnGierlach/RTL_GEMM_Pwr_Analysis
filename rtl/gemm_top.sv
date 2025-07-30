@@ -4,12 +4,12 @@ module gemm_top
 #(DATA_WIDTH = 64,
   MATRIX_WIDTH = 4,
   MATRIX_HEIGHT = 4,
-  MATRIX_ADJUST = 4)(
+  MATRIX_K = 4)(
     input iclk, irst, istart,
     input[DATA_WIDTH-1:0] ialpha, ibeta,
-    input logic signed [DATA_WIDTH-1:0] ia_matrix [0:MATRIX_HEIGHT-1][0:MATRIX_WIDTH-1],
-    input logic signed [DATA_WIDTH-1:0] ib_matrix [0:MATRIX_ADJUST-1][0:MATRIX_WIDTH-1],
-    input logic signed [DATA_WIDTH-1:0] ic_matrix [0:MATRIX_HEIGHT-1][0:MATRIX_ADJUST-1],
+    input logic signed [DATA_WIDTH-1:0] ia_matrix [0:MATRIX_HEIGHT-1][0:MATRIX_K-1],
+    input logic signed [DATA_WIDTH-1:0] ib_matrix [0:MATRIX_K-1][0:MATRIX_WIDTH-1],
+    input logic signed [DATA_WIDTH-1:0] ic_matrix [0:MATRIX_HEIGHT-1][0:MATRIX_WIDTH-1],
     output reg[DATA_WIDTH-1:0] oresult_matrix [0:MATRIX_HEIGHT-1][0:MATRIX_WIDTH-1],
     output obusy, odone
 );
@@ -19,7 +19,7 @@ module gemm_top
     
     reg[DATA_WIDTH-1:0] tmp_matrix [0:MATRIX_HEIGHT-1][0:MATRIX_WIDTH-1];
     reg[1:0] state, next_state;
-    reg[DATA_WIDTH-1:0] partial_sum [0:MATRIX_WIDTH-1];
+    reg[DATA_WIDTH-1:0] partial_sum [0:MATRIX_K-1];
     reg[DATA_WIDTH-1:0] sum;
     int i, j;
     
@@ -27,7 +27,7 @@ module gemm_top
     // Generate the matrix sum module in parallel
     genvar gen_k;
     generate
-        for(gen_k = 0; gen_k < MATRIX_WIDTH; gen_k = gen_k + 1)begin:gendgenerate
+        for(gen_k = 0; gen_k < MATRIX_K; gen_k = gen_k + 1)begin:gendgenerate
             mat_sum #(
                 .DATA_WIDTH(DATA_WIDTH)
             ) mat_sum_inst (
@@ -44,7 +44,7 @@ module gemm_top
     always@(*)begin
         if(irst == 0 && iclk == 1 && state == COMPUTE)begin
             sum = 0;
-            for(int k = 0; k < MATRIX_WIDTH; k = k + 1)begin
+            for(int k = 0; k < MATRIX_K; k = k + 1)begin
                 sum = sum + partial_sum[k];
             end
         end
