@@ -18,6 +18,7 @@ void gemm(int m, int n, int k,
     C.resize(m, vector<double>(n, 0.0));
     
     // Perform GEMM operation
+    iteration_count = 0;
     for (int i = 0; i < m; i++) {
         for (int j = 0; j < n; j++) {
             double sum = 0.0;
